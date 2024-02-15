@@ -36,7 +36,7 @@ public class PersonServices {
         List<PersonVO> people = DozerMapper.parseListObjects(repository.findAll(), PersonVO.class);
         people.stream()
                 .forEach(p ->
-                        linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel());
+                        p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
         return people;
     }
 
