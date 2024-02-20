@@ -1,10 +1,14 @@
 package br.com.erudio.restwithspringbootandjavaerudio.services;
 
 import br.com.erudio.restwithspringbootandjavaerudio.controllers.BookController;
+import br.com.erudio.restwithspringbootandjavaerudio.controllers.PersonController;
 import br.com.erudio.restwithspringbootandjavaerudio.data.vo.v1.BookVO;
+import br.com.erudio.restwithspringbootandjavaerudio.data.vo.v1.PersonVO;
+import br.com.erudio.restwithspringbootandjavaerudio.exceptions.RequiredObjectsNullException;
 import br.com.erudio.restwithspringbootandjavaerudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.restwithspringbootandjavaerudio.mapper.DozerMapper;
 import br.com.erudio.restwithspringbootandjavaerudio.model.BookModel;
+import br.com.erudio.restwithspringbootandjavaerudio.model.PersonModel;
 import br.com.erudio.restwithspringbootandjavaerudio.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +26,15 @@ public class BookServices {
     private BookRepository repository;
 
     public BookVO create(BookVO bookVO){
+
+        if(bookVO == null){
+            throw new RequiredObjectsNullException();
+        }
+
         BookModel entity = DozerMapper.parseObject(bookVO, BookModel.class);
-        BookVO vo = DozerMapper.parseObject(repository.save(entity), BookVO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(bookVO.getKey())).withSelfRel());
+        BookModel saved = repository.save(entity);
+        BookVO vo = DozerMapper.parseObject(saved, BookVO.class);
+        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel());
         return vo;
     }
 
@@ -48,7 +58,12 @@ public class BookServices {
 
     }
 
+
+
     public BookVO update(BookVO bookVO){
+        if(bookVO == null){
+            throw new RequiredObjectsNullException();
+        }
         BookModel entity = repository.findById(bookVO.getKey())
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for that Id!"));
         entity.setAuthor(bookVO.getAuthor());
@@ -56,7 +71,7 @@ public class BookServices {
         entity.setTitle(bookVO.getTitle());
         entity.setLaunchDate(new Date());
         BookVO vo = DozerMapper.parseObject(repository.save(entity), BookVO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(bookVO.getKey())).withSelfRel());
+        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel());
         return vo;
 
     }

@@ -1,10 +1,12 @@
 package unittests;
 
+import br.com.erudio.restwithspringbootandjavaerudio.data.vo.v1.BookVO;
 import br.com.erudio.restwithspringbootandjavaerudio.data.vo.v1.PersonVO;
 import br.com.erudio.restwithspringbootandjavaerudio.mapper.DozerMapper;
 import br.com.erudio.restwithspringbootandjavaerudio.model.PersonModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import unittests.mocks.MockBook;
 import unittests.mocks.MockPerson;
 
 import java.util.List;
@@ -14,9 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DozerConverterTest {
     MockPerson inputObject;
 
+    MockBook mockBook;
+
     @BeforeEach
     public void setUp() {
+
         inputObject = new MockPerson();
+        mockBook = new MockBook();
     }
 
     @Test
@@ -27,6 +33,15 @@ public class DozerConverterTest {
         assertEquals("Last Name Test0", output.getLastName());
         assertEquals("Addres Test0", output.getAddress());
         assertEquals("Male", output.getGender());
+    }
+
+    @Test
+    public void parseEntityToVOTestBook(){
+        BookVO output = DozerMapper.parseObject(mockBook.mockEntity(),BookVO.class);
+        assertEquals(Long.valueOf(0L), output.getKey());
+        assertEquals("Michael C. Feathers0", output.getAuthor());
+        assertEquals(49.0, output.getPrice());
+        assertEquals("Working effectively with legacy code0", output.getTitle() );
     }
 
     @Test

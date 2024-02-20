@@ -2,12 +2,17 @@ package br.com.erudio.restwithspringbootandjavaerudio.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "books")
-public class BookModel {
+public class BookModel implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +20,7 @@ public class BookModel {
     private String author;
 
     @Column(name = "launch_date")
+    @Temporal(TemporalType.DATE)
     private Date launchDate;
     private  Double price;
     private String title;

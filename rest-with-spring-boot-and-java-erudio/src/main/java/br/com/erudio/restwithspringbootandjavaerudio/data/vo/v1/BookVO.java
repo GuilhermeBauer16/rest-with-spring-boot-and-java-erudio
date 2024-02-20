@@ -4,15 +4,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.dozermapper.core.Mapping;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class BookVO extends RepresentationModel<BookVO> {
+public class BookVO extends RepresentationModel<BookVO> implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
     @JsonProperty("id")
     @Mapping("id")
     private Long key;
     private String author;
-    private Date launchDate = new Date();
+    private Date launchDate;
     private  Double price;
     private String title;
 
